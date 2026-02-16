@@ -50,3 +50,21 @@ export const userPut = async (req, res) => {
         user
     }); 
 }
+
+export const userDelete = async (req, res) => {
+    const {id} = req.params;
+    await User.findByIdAndUpdate(id, {state: false});
+    const authenticatedUser = req.user;
+    res.status(200).json({
+        msg: "Usuario eliminado con éxito",
+        authenticatedUser
+    });
+}
+
+export const getUserById = async (req, res) => {
+    const {id} = req.params;
+    const user = await User.findById({_id: id});
+    res.status(200).json({
+        user
+    });
+}
