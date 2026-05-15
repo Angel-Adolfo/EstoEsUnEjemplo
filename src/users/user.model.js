@@ -3,16 +3,16 @@ import mongoose from "mongoose";
 const UserSchema = mongoose.Schema({
     name: {
         type: String,
-        required: [true, "El nombre es requerido"],
+        required: [true, "The name is required for the procedure"],
     },
     email: {
         type: String,
-        required: [true, "El email es requerido para seguir el procedimiento"],
+        required: [true, "The email is required to follow the procedure"],
         unique: true,
     },
     password: {
         type: String,
-        required: [true, "La contraseña es obligatoria"],
+        required: [true, "The password is required"],
     },
     img: {
         type: String,
@@ -32,7 +32,7 @@ const UserSchema = mongoose.Schema({
     },
 })
 
-UserSchema.methods.toJSON = function(){
+UserSchema.methods.toJSON = function () {
     const { __v, password, _id, ...user } = this.toObject();
     user.uid = _id;
     return user;

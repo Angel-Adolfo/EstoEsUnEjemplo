@@ -4,24 +4,25 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import helmet from "helmet";
+import dotenv from "dotenv";
 import { dbConnection } from "./mongo.js";
 
 class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT || 3000;
-        this.usuarioPath = "/coffeApi/v1/users"
+        this.userPath = "/coffeApi/v1/users"
         this.authPath = "/coffeApi/v1/auth"
 
-        this.middleares();
-        this.conectarDB();
+        this.middlewares();
+        this.connectDB();
         this.routes();
     }
 
-    async conectarDB() {
+    async connectDB() {
         await dbConnection();
     }
-    middleares() {
+    middlewares() {
         this.app.use(express.urlencoded({ extended: false }));
         this.app.use(cors());
         this.app.use(express.json());
@@ -30,7 +31,7 @@ class Server {
     }
 
     routes() {
-        this.app.listen(this.usuarioPath, () => {
+        this.app.listen(this.userPath, () => {
             console.log("Server | users route is running", this.port);
         });
     }

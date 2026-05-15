@@ -1,44 +1,47 @@
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
-import { generateJWT } from "../helpers/generate-jwt.js";
+import { generateJWT } from "../helpers/jwt.js";
 
 export const login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
+
         const user = await User.findOne({ email });
 
         if (!user) {
             return res.status(400).json({
-                msg: "The credentials are not correct - email"
+                ok: false,
+                msg: 'User not found'
             });
         }
 
-        if (!user.state) {
+        if (!user.status) {
             return res.status(400).json({
-                msg: "The credentials are not correct - state: false"
+                ok: false,
+                msg: 'User is not active'
             });
         }
 
-        const validPassword = bcrypt.compareSync(password, user.password);
-        if (!validPassword) {
+        const validPasword = bcrypt.compareSync(password, user.password);
+        if (!validPasword) {
             return res.status(400).json({
-                msg: "The credentials are not correct - password"
+                ok: false,
+                msg: 'Invalid password'
             });
         }
 
-        const token = await generateJWT(user.id);
+        const token = generateJWT(user.id);
 
-        res.status(200).json({
-            msg: 'Login OK!!!',
-            user,
+        res.json({
+            ok: true,
             token
         });
 
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
         res.status(500).json({
-            msg: 'An error occurred while trying to log in'
+            ok: false,
+            msg: 'Error logging in user'
         });
     }
 }
